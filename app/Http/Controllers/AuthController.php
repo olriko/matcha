@@ -25,6 +25,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $this->validate($request, [
+            'username' => 'required|min:4|max:20',
             'first_name' => 'required|min:4|max:20',
             'last_name' => 'required|min:4|max:20',
             'email' => 'required|email',
@@ -35,7 +36,8 @@ class AuthController extends Controller
 
         $this->db()
             ->prepare(
-                'INSERT INTO users (first_name, last_name, email, password, gender, sexual_orientation) VALUES (:first_name, :last_name, :email, :password, :gender, :sexual_orientation)')
+                'INSERT INTO users (username, first_name, last_name, email, password, gender, sexual_orientation) VALUES (:username, :first_name, :last_name, :email, :password, :gender, :sexual_orientation)')
+            ->bindParam(':username', $request->get('username'))
             ->bindParam(':first_name', $request->get('first_name'))
             ->bindParam(':last_name', $request->get('last_name'))
             ->bindParam(':email', $request->get('email'))
@@ -43,7 +45,9 @@ class AuthController extends Controller
             ->bindParam(':first_name', $request->get('first_name'))
             ->execute();
 
-        return redirect()->route('home');
+        return response()->json([
+            'success' => true
+        ]);
     }
 
     public function logout()

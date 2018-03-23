@@ -3,6 +3,7 @@
 namespace App\Services\Validator;
 
 
+use App\Exceptions\ValidationException;
 use Illuminate\Http\Request;
 use Route;
 
@@ -47,9 +48,7 @@ class Validator
         }
 
         if (count($this->errors)) {
-            return redirect($this->request->url())
-                ->withErrors($this->errors)
-                ->withInput($this->data);
+            throw new ValidationException();
         }
 
     }

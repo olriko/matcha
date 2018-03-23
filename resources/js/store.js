@@ -1,6 +1,9 @@
 import Vuex from 'vuex'
+import Vue from 'vue'
 
-export default new Vuex.Store({
+Vue.use(Vuex);
+
+const store =  new Vuex.Store({
     state: {
         user: null,
         errors: []
@@ -22,5 +25,12 @@ export default new Vuex.Store({
             commit('user')
         }
     },
+    getters: {
+        user: state => state.user
+    },
     strict: true
+
 })
+
+
+export default store
