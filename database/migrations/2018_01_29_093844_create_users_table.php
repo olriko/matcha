@@ -24,7 +24,7 @@ class CreateUsersTable extends Migration
 
             $table->string('email');
 
-            $table->string('gender')->default('');
+            $table->string('gender')->default('other');
             $table->string('sexual_orientation')->default('bisexual');
 
             $table->text('description')->nullable();

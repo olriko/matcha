@@ -15,14 +15,14 @@
                             <b-row>
                                 <b-col sm="6">
                                     <b-form-group label="Firstname">
-                                        <b-form-input v-model="user.firstname"
+                                        <b-form-input v-model="user.first_name"
                                                       type="text"
                                                       placeholder="Firstname"></b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm="6">
                                     <b-form-group label="Lastname">
-                                        <b-form-input v-model="user.lastname"
+                                        <b-form-input v-model="user.last_name"
                                                       type="text"
                                                       placeholder="Lastname"></b-form-input>
                                     </b-form-group>
@@ -75,8 +75,8 @@
                 ],
                 sexual_orientation_options: [
                     { value: null, text: 'Please select an option' },
-                    { value: 'hetero', text: 'Hetero' },
-                    { value: 'gay', text: 'Gay' },
+                    { value: 'heterosexual', text: 'Heterosexual' },
+                    { value: 'homosexual', text: 'Homosexual' },
                     { value: 'bisexual', text: 'Bisexual' },
                 ],
                 user: {
@@ -93,7 +93,14 @@
         },
         methods: {
             submit() {
-
+                axios.post('api/register', this.user).then((res) => {
+                    if (res.status === 200) {
+                    }
+                }).catch((error) => {
+                    if (error.response.status === 422) {
+                        this.$store.commit('errors', error.response.data.errors)
+                    }
+                })
             }
         }
     }

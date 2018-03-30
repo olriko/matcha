@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Validator;
+namespace App\Services;
 
 
 use App\Exceptions\ValidationException;
@@ -16,7 +16,7 @@ class Validator
 
     private $request;
 
-    private $errors = [];
+    public $errors = [];
 
     public function __construct(Request $request, array $properties)
     {
@@ -48,23 +48,22 @@ class Validator
         }
 
         if (count($this->errors)) {
-            throw new ValidationException();
+            throw new ValidationException($this);
         }
-
     }
 
     private function required($field, $params)
     {
         if (!isset($this->data[$field])) {
-            $this->errors[] = "$field is required.";
+            $this->errors[] = "$field is required." ;
         }
 
         if (is_string($this->data[$field]) && !strlen($this->data[$field])) {
-            $this->errors[] = "$field is required.";
+            $this->errors[] = "$field is required." ;
         }
 
         if (is_array($this->data[$field]) && !count($this->data[$field])) {
-            $this->errors[] = "$field is required.";
+            $this->errors[] = "$field is required." ;
         }
     }
 
@@ -125,5 +124,39 @@ class Validator
                $this->errors[] = "$field confirmation is invalid.";
            }
         }
+    }
+
+    private function unique($field, $params)
+    {
+        $pdo = app('db')->getPdo();
+        $params = explode(',', $params);
+        $value = $this->data[$field];
+
+        $sql = "SELECT * FROM {$params[0]} WHERE {$params[1]} = '{$value}'";
+
+        $query = $pdo->query($sql);
+        if ($query) {
+            if (count($query->fetchAll())) {
+                $this->errors[] = "$field is not unique";
+            };
+        }
+
+    }
+
+    private function exists($field, $params)
+    {
+        $pdo = app('db')->getPdo();
+        $params = explode(',', $params);
+        $value = $this->data[$field];
+
+        $sql = "SELECT * FROM {$params[0]} WHERE {$params[1]} = '{$value}'";
+
+        $query = $pdo->query($sql);
+        if ($query) {
+            if (count($query->fetchAll()) === 0) {
+                $this->errors[] = "$field not exists";
+            };
+        }
+
     }
 }

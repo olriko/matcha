@@ -6,14 +6,14 @@
                     <div class="card-body">
                         <h5 class="card-title">Login</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Welcome !</h6>
-                        <form @submit.prevent="submit">
+                        <form @submit.prevent="login(user)">
                             <b-form-group label="Email">
-                                <b-form-input id="first_name" v-model="login.email"
+                                <b-form-input id="first_name" v-model="user.email"
                                               type="text"
                                               placeholder="Email"></b-form-input>
                             </b-form-group>
                             <b-form-group label="Password">
-                                <b-form-input id="password" v-model="login.password"
+                                <b-form-input id="password" v-model="user.password"
                                               type="password"
                                               placeholder="Password"></b-form-input>
                             </b-form-group>
@@ -28,20 +28,23 @@
 </template>
 
 <script>
+    import { mapActions } from 'vuex'
+
+
     export default {
         name: "login",
         data() {
             return {
-                login: {
+                user: {
                     username: '',
                     password: '',
                 }
             }
         },
         methods: {
-            submit() {
-
-            }
+            ...mapActions([
+                'login'
+            ])
         }
     }
 </script>
