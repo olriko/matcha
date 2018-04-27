@@ -10,6 +10,7 @@
         "firebase/php-jwt": "^5.0",
         "intervention/image": "^2.4",
         "laravel/lumen-framework": "5.6.*",
+        "rtconner/laravel-kint": "~3.0",
         "vlucas/phpdotenv": "~2.2"
     },
     "require-dev": {
@@ -20,7 +21,10 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/"
-        }
+        },
+        "files": [
+            "app/helpers.php"
+        ]
     },
     "autoload-dev": {
         "classmap": [

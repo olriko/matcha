@@ -21,4 +21,14 @@ class Controller extends BaseController
     {
         return  app('db')->getPdo();
     }
+
+    protected function notify($id, $message)
+    {
+
+    }
+
+    protected function score($id, $points)
+    {
+
+    }
 }

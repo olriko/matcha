@@ -47,7 +47,7 @@ class AuthController extends Controller
                 $jwt = JWT::encode([
                     'iat' =>  Carbon::now()->timestamp,
                     'exp' =>  Carbon::now()->addDay()->timestamp,
-                    'id' => $user->get('id'),
+                    'user' => $user->get('id'),
                     'name' => $user->get('name'),
                 ], env('APP_KEY'));
 
@@ -105,6 +105,15 @@ class AuthController extends Controller
 
     public function recover(Request $request)
     {
+        $this->validation($request, [
+            'email' => 'required|email',
+        ]);
+
+        $email = $request->get('email');
+
+        $user = $this->db()->prepare("SELECT * FROM users WHERE email = :email");
+        $user->bindParam(':email', $email);
+        $user->execute();
 
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Exceptions\ValidationException;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Route;
 
 class Validator
@@ -86,13 +87,13 @@ class Validator
 
     private function min($field, $params)
     {
-        if (is_array($this->data[$field])) {
+        if (isset($this->data[$field]) && is_array($this->data[$field])) {
             if (count($this->data[$field]) < (int) $params) {
                 $this->errors[] = "$field must have $params min elements.";
             }
         }
 
-        if (is_string($this->data[$field])) {
+        if (isset($this->data[$field]) && is_string($this->data[$field])) {
             if (strlen($this->data[$field]) < (int) $params) {
                 $this->errors[] = "$field must have $params min char.";
             }
@@ -101,13 +102,13 @@ class Validator
 
     private function max($field, $params)
     {
-        if (is_array($this->data[$field])) {
+        if (isset($this->data[$field]) && is_array($this->data[$field])) {
             if (count($this->data[$field]) > (int) $params) {
                 $this->errors[] = "$field must have $params max elements.";
             }
         }
 
-        if (is_string($this->data[$field])) {
+        if (isset($this->data[$field]) && is_string($this->data[$field])) {
             if (strlen($this->data[$field]) > (int) $params) {
                 $this->errors[] = "$field must have $params max char.";
             }
@@ -117,12 +118,14 @@ class Validator
 
     private function confirmation($field, $params)
     {
-        if (!isset($this->data[$field . '_confirmation']) || !strlen($this->data[$field . '_confirmation'])) {
-            $this->errors[] = "$field confirmation is required.";
-        } else {
-           if ($this->data[$field . '_confirmation'] != $this->data[$field]) {
-               $this->errors[] = "$field confirmation is invalid.";
-           }
+        if (isset($this->data['password'])) {
+            if (!isset($this->data[$field . '_confirmation']) || !strlen($this->data[$field . '_confirmation'])) {
+                $this->errors[] = "$field confirmation is required.";
+            } else {
+                if ($this->data[$field . '_confirmation'] != $this->data[$field]) {
+                    $this->errors[] = "$field confirmation is invalid.";
+                }
+            }
         }
     }
 
@@ -133,6 +136,10 @@ class Validator
         $value = $this->data[$field];
 
         $sql = "SELECT * FROM {$params[0]} WHERE {$params[1]} = '{$value}'";
+
+        if (isset($params[2])) {
+            $sql .= " AND id <> {$params[2]}";
+        }
 
         $query = $pdo->query($sql);
         if ($query) {
@@ -158,5 +165,13 @@ class Validator
             };
         }
 
+    }
+
+    private function image($field, $params) {
+        $value = $this->data[$field];
+
+        if (!($value instanceof UploadedFile) || !starts_with($value->getClientMimeType(), 'image/')) {
+            $this->errors[] = "$field is not an image.";
+        }
     }
 }

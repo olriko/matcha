@@ -3,42 +3,40 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Contracts\Auth\Factory as Auth;
+use Firebase\JWT\JWT;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class Authenticate
 {
-    /**
-     * The authentication guard factory instance.
-     *
-     * @var \Illuminate\Contracts\Auth\Factory
-     */
-    protected $auth;
+    private $db;
 
-    /**
-     * Create a new middleware instance.
-     *
-     * @param  \Illuminate\Contracts\Auth\Factory  $auth
-     * @return void
-     */
-    public function __construct(Auth $auth)
+    public function __construct()
     {
-        $this->auth = $auth;
+        $this->db = app('db')->getPdo();
     }
 
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  string|null  $guard
-     * @return mixed
-     */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle(Request $request, Closure $next)
     {
-        if ($this->auth->guard($guard)->guest()) {
-            return response('Unauthorized.', 401);
-        }
+        if ($request->hasHeader('TOKEN')) {
+            $data = (array) JWT::decode($request->header('TOKEN'), env('APP_KEY'), ['HS256']);
+            if ($data) {
+                $user = $this->fetch($data['user']);
 
+                if ($user) {
+                    $request->request->add(['user' => $user->all()]);
+                }
+            }
+        }
         return $next($request);
+    }
+
+    private function fetch($id): Collection
+    {
+        $query = $this->db->prepare("SELECT * FROM users WHERE id = :id");
+
+        $query->bindParam(':id', $id);
+        $query->execute();
+        return collect($query->fetch(\PDO::FETCH_ASSOC));
     }
 }

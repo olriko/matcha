@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Firebase\JWT\ExpiredException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
@@ -48,6 +49,10 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof ValidationException) {
             return $exception->render($request);
+        }
+
+        if ($exception instanceof ExpiredException || $exception instanceof \UnexpectedValueException) {
+            return response()->json(['message' => 'Token expired'], 401);
         }
 
         return parent::render($request, $exception);

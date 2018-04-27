@@ -40,4 +40,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->belongsToMany(Tag::class);
     }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
 }

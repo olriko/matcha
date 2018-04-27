@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9aa05e3ba8ad91fc0f5a583d3a91ffec",
+    "content-hash": "84654177f2edda26c345c8d18ac53df1",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -1534,6 +1534,64 @@
             "time": "2017-09-21T16:29:17+00:00"
         },
         {
+            "name": "kint-php/kint",
+            "version": "2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kint-php/kint.git",
+                "reference": "b091715eadaf6e1a7ef927f3e81d1004611d2aea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kint-php/kint/zipball/b091715eadaf6e1a7ef927f3e81d1004611d2aea",
+                "reference": "b091715eadaf6e1a7ef927f3e81d1004611d2aea",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.1.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.0",
+                "phpunit/phpunit": "^4.0",
+                "symfony/finder": "^2.6"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "init.php"
+                ],
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rokas Šleinius",
+                    "homepage": "https://github.com/raveren"
+                },
+                {
+                    "name": "Jonathan Vollebregt",
+                    "homepage": "https://github.com/jnvsor"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/kint-php/kint/graphs/contributors"
+                }
+            ],
+            "description": "Kint - debugging tool for PHP developers",
+            "homepage": "https://kint-php.github.io/kint/",
+            "keywords": [
+                "debug",
+                "kint",
+                "php"
+            ],
+            "time": "2017-09-06T17:46:03+00:00"
+        },
+        {
             "name": "laravel/lumen-framework",
             "version": "v5.6.2",
             "source": {
@@ -1986,6 +2044,56 @@
                 "simple-cache"
             ],
             "time": "2017-10-23T01:57:42+00:00"
+        },
+        {
+            "name": "rtconner/laravel-kint",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rtconner/laravel-kint.git",
+                "reference": "47c9e87bda43d70a0f01a40755a00b10546e6472"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rtconner/laravel-kint/zipball/47c9e87bda43d70a0f01a40755a00b10546e6472",
+                "reference": "47c9e87bda43d70a0f01a40755a00b10546e6472",
+                "shasum": ""
+            },
+            "require": {
+                "kint-php/kint": "^2.0",
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Conner\\Kint\\KintServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Conner\\Kint\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Robert Conner",
+                    "email": "rtconner@smarter.bz"
+                }
+            ],
+            "description": "Seamless integration between Laravel and Kint.",
+            "homepage": "https://smartersoftware.net/packages/laravel-kint",
+            "keywords": [
+                "kint",
+                "laravel",
+                "laravel5"
+            ],
+            "time": "2017-08-29T03:49:51+00:00"
         },
         {
             "name": "symfony/class-loader",
