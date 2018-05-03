@@ -64,8 +64,8 @@
             vueSlider,
             VueTagsInput
         },
-        created() {
-
+        mounted() {
+            this.queryOfDeath();
         },
         watch: {
             'tag': 'fetchTags',

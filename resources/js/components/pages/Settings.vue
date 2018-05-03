@@ -4,6 +4,7 @@
             <b-col sm="6">
                 <images v-if="user" :pictures="user.images"></images>
                 <tags v-if="user" :tags="user.tags"></tags>
+                <location v-if="user"></location>
             </b-col>
             <b-col sm="6">
                 <div v-if="user"  class="card mt-5">
@@ -50,6 +51,11 @@
                                               type="text"
                                               placeholder="Email"></b-form-input>
                             </b-form-group>
+                            <b-form-group label="Birthday">
+                                <b-form-input v-model="user.birthday"
+                                              type="date"
+                                              placeholder="Birthday"></b-form-input>
+                            </b-form-group>
 
                             <b-form-group label="Password">
                                 <b-form-input id="password" v-model="user.password"
@@ -75,13 +81,15 @@
     import { mapGetters } from 'vuex'
     import SettingsTags from './SettingsTags'
     import SettingsImages from './SettingsImages'
+    import SettingsLocation from './SettingsLocation'
 
 
     export default {
         name: "settings",
         components: {
             tags: SettingsTags,
-            images: SettingsImages
+            images: SettingsImages,
+            location: SettingsLocation
         },
         data() {
             return {

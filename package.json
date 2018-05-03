@@ -27,6 +27,7 @@
     "js-cookie": "^2.2.0",
     "jsonwebtoken": "^8.2.0",
     "vue-luxon": "^0.5.5",
-    "vue-slider-component": "^2.6.2"
+    "vue-slider-component": "^2.6.2",
+    "vue2-google-maps": "^0.9.6"
   }
 }

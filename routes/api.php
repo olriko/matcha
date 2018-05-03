@@ -16,6 +16,7 @@ $router->post('/unblock/{id}', ['middleware' => 'auth', 'uses' => 'UserControlle
 
 $router->get('/user/{id}/edit', 'UserController@edit');
 $router->put('/user', ['middleware' => 'auth', 'uses' => 'UserController@update']);
+$router->put('/user/geo', ['middleware' => 'auth', 'uses' => 'UserController@updateGeo']);
 
 $router->get('/tags/{query}', 'TagController@search');
 $router->post('/tag', ['middleware' => 'auth', 'uses' =>'TagController@add']);
@@ -24,4 +25,7 @@ $router->delete('/tag/{id}', ['middleware' => 'auth', 'uses' => 'TagController@r
 $router->post('/image', ['middleware' => 'auth', 'uses' =>'ImageController@add']);
 $router->delete('/image/{id}', ['middleware' => 'auth', 'uses' => 'ImageController@remove']);
 $router->put('/image/{id}', ['middleware' => 'auth', 'uses' => 'ImageController@update']);
+
+$router->post('/search', 'SearchController@search');
+
 

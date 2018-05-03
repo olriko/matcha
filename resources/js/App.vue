@@ -11,6 +11,7 @@
 <script>
     import header from './components/Header'
     import errors from './components/Errors'
+    import { mapState } from 'vuex'
 
     import cookies from 'js-cookie';
 
@@ -21,9 +22,14 @@
             'heading': header,
             'errors': errors
         },
+        computed: {
+            ...mapState([
+                'jwt',
+            ])
+        },
         created()
         {
-            let self = this
+            let self = this;
             let token = cookies.get('token');
             if (token) {
                 this.$store.commit('jwt', token);

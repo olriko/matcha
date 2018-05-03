@@ -31,6 +31,9 @@ class CreateUsersTable extends Migration
 
             $table->integer('score')->default(0);
 
+            $table->string('lat')->nullable();
+            $table->string('lng')->nullable();
+
             $table->date('birthday')->nullable();
             $table->timestamps();
         });

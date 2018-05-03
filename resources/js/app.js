@@ -4,6 +4,15 @@ import router from './router'
 import store from './store'
 import Vue from 'vue'
 import Luxon from 'vue-luxon'
+import * as VueGoogleMaps from 'vue2-google-maps'
+
+
+Vue.use(VueGoogleMaps, {
+    load: {
+        key: process.env.MIX_GOOGLE_API,
+        libraries: 'places'
+    }
+});
 
 require('./bootstrap');
 
@@ -18,6 +27,8 @@ Vue.use(Luxon, {
     diffForHumans: {}, // see diffForHumans below
     i18n: {} // see i18n below
 });
+Vue.component('google-map', VueGoogleMaps.Map);
+Vue.component('google-marker', VueGoogleMaps.Marker);
 
 /**
  * Global Components

@@ -209,6 +209,27 @@ class UserController extends Controller
         ]);
     }
 
+    public function updateGeo(Request $request) {
+        $currentUser = $request->get('user');
+        $this->validation($request, [
+            'lat' => 'required',
+            'lng' => 'required',
+        ]);
+
+        $data = $request->all();
+
+        $query = $this->db()->prepare("UPDATE users SET lat = :lat, lng = :lng  WHERE id = :id");
+        if ($query) {
+            $query->bindParam(':lat', $data['lat'], \PDO::PARAM_STR);
+            $query->bindParam(':lng', $data['lng'], \PDO::PARAM_STR);
+            $query->bindParam(':id', $currentUser['id'], \PDO::PARAM_INT);
+
+            $query->execute();
+        }
+
+        return response()->json(['success' => true]);
+    }
+
     public function update(Request $request)
     {
         $currentUser = $request->get('user');
@@ -227,6 +248,7 @@ class UserController extends Controller
 
         $cols = "username = :username ," .
             "first_name = :first_name ," .
+            "birthday = :birthday ," .
             "last_name = :last_name ," .
             "email = :email ," .
             "description = :description ," .
@@ -243,6 +265,7 @@ class UserController extends Controller
             $query->bindParam(':username', $data['username'], \PDO::PARAM_STR);
             $query->bindParam(':first_name', $data['first_name'], \PDO::PARAM_STR);
             $query->bindParam(':last_name', $data['last_name'], \PDO::PARAM_STR);
+            $query->bindParam(':birthday', $data['birthday'], \PDO::PARAM_STR);
             $query->bindParam(':email', $data['email'], \PDO::PARAM_STR);
             if ($request->has('password')) {
                 $password = password_hash($request->get('password'), PASSWORD_DEFAULT);
