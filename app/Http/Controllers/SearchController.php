@@ -12,6 +12,10 @@ class SearchController extends Controller
 {
     public function search(Request $request)
     {
+        if ($request->has('user')) {
+
+        }
+
         return response()->json([
             'success' => true,
             'results' => []

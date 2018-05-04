@@ -69,6 +69,8 @@ class UserController extends Controller
             $query->bindParam(':visited_by',$user);
             $query->bindParam(':created_at',$created_at);
             $query->execute();
+
+            $this->notify($id, $request->get('user')['username'] . ' has viewed your profile', $user);
         }
 
         $user = $this->fetch($id)->except(['password'])->all();
@@ -189,6 +191,20 @@ class UserController extends Controller
             $query->bindParam(':liked_by',$user);
             $query->bindParam(':created_at',$created_at);
             $query->execute();
+        }
+
+        /**
+         * Un utilisateur “liké” a “liké” en retour ?
+         */
+        $query = $this->db()->prepare("SELECT * FROM likes WHERE user_id = :user_id AND liked_by = :liked_by");
+        $query->bindParam(':user_id',$user);
+        $query->bindParam(':liked_by',$id);
+        $query->execute();
+
+        if ($query->rowCount() > 0) {
+            $this->notify($id, $request->get('user')['username'] . ' liked you in return', $user);
+        } else {
+            $this->notify($id, $request->get('user')['username'] . ' liked you', $user);
         }
 
         return response()->json([

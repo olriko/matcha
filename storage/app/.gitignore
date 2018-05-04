@@ -1,2 +1,4 @@
 *
 !.gitignore
+!./avatars/man.png
+!./avatars/woman.png
