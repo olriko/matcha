@@ -13,8 +13,18 @@
 
                 <!-- Right aligned nav items -->
                 <b-navbar-nav v-if="jwt" class="ml-auto">
+                    <b-nav-item-dropdown @click="read" right>
+                        <template slot="button-content">
+                            <em>Notifications <b-badge variant="danger" v-show="unread > 0">{{ unread }}</b-badge></em>
+                        </template>
+                        <b-dropdown-item class="text-center" :key="notification.id" v-for="notification in notifications"
+                                         :to="{name: 'user', params: {id: notification.notify_by }}">{{
+                            notification.description }}
+                        </b-dropdown-item>
+                        <hr>
+                        <b-dropdown-item class="text-center" :to="{name: 'notifications'}">All notifications</b-dropdown-item>
+                    </b-nav-item-dropdown>
                     <b-nav-item-dropdown right>
-                        <!-- Using button-content slot -->
                         <template slot="button-content">
                             <em>User</em>
                         </template>
@@ -34,26 +44,51 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex'
-    import { mapActions } from 'vuex'
+    import {mapState} from 'vuex'
+    import {mapActions} from 'vuex'
 
 
     export default {
         name: "header-nav",
         mounted() {
+            if (this.jwt) {
+                this.notification()
+                setInterval(() => {
+                    this.notification()
+                }, 5500)
+            }
         },
         data() {
-            return {}
+            return {
+                notifications: []
+            }
         },
         computed: {
             ...mapState([
                 'jwt',
-            ])
+            ]),
+            unread() {
+                return this.notifications.length;
+            }
         },
         methods: {
             ...mapActions([
                 'logout'
-            ])
+            ]),
+            read() {
+
+            },
+            notification() {
+                axios.get('api/notifications', {
+                    params: {
+                        all: false
+                    }
+                }).then((rep) => {
+                    if (rep.status === 200) {
+                        this.notifications = rep.data.notifications
+                    }
+                })
+            }
         }
     }
 </script>

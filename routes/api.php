@@ -29,5 +29,9 @@ $router->put('/image/{id}', ['middleware' => 'auth', 'uses' => 'ImageController@
 $router->post('/search', 'SearchController@search');
 
 $router->get('/notifications', ['middleware' => 'auth', 'uses' => 'NotificationController@get']);
+$router->post('/notifications/read', ['middleware' => 'auth', 'uses' => 'NotificationController@read']);
+
+$router->get('/matches', ['middleware' => 'auth', 'uses' => 'ChatController@get']);
+
 
 

@@ -60,23 +60,42 @@ class UserController extends Controller
 
     public function show(Request $request, $id)
     {
+
+        /**
+         * Visits
+         */
         if ($request->has('user') && $request->get('user')['id'] != $id) {
             $user = $request->get('user')['id'];
             $created_at = Carbon::now()->toDateTimeString();
 
-            $query = $this->db()->prepare("INSERT INTO visits (user_id, visited_by, created_at) VALUES (:user_id, :visited_by, :created_at)");
+            $query = $this->db()->prepare("SELECT * FROM visits WHERE user_id = :user_id AND visited_by = :visited_by");
             $query->bindParam(':user_id',$id);
             $query->bindParam(':visited_by',$user);
-            $query->bindParam(':created_at',$created_at);
             $query->execute();
 
-            $this->notify($id, $request->get('user')['username'] . ' has viewed your profile', $user);
+            if ($query->rowCount() > 0) {
+                $query = $this->db()->prepare("UPDATE visits SET created_at = :created_at WHERE user_id = :user_id AND visited_by = :visited_by");
+                $query->bindParam(':created_at',$created_at);
+                $query->bindParam(':user_id',$id);
+                $query->bindParam(':visited_by',$user);
+                $query->execute();
+            } else {
+                $query = $this->db()->prepare("INSERT INTO visits (user_id, visited_by, created_at) VALUES (:user_id, :visited_by, :created_at)");
+                $query->bindParam(':user_id',$id);
+                $query->bindParam(':visited_by',$user);
+                $query->bindParam(':created_at',$created_at);
+                $query->execute();
+
+                $this->notify($id, $request->get('user')['username'] . ' has viewed your profile', $user);
+            }
         }
 
         $user = $this->fetch($id)->except(['password'])->all();
 
+        /**
+         * Has already like ?
+         */
         if ($request->has('user')) {
-
             $liked_by = $request->get('user')['id'];
 
             $likes = $this->db()->prepare("SELECT * FROM `likes` WHERE user_id = :id AND liked_by = :liked_by ");
@@ -87,6 +106,9 @@ class UserController extends Controller
             $user['i_like'] = $likes->rowCount() > 0;
         }
 
+        /**
+         * Has already report ?
+         */
         if ($request->has('user')) {
 
             $reported_by = $request->get('user')['id'];
@@ -99,6 +121,9 @@ class UserController extends Controller
             $user['i_report'] = $reports->rowCount() > 0;
         }
 
+        /**
+         * Has already block ?
+         */
         if ($request->has('user')) {
 
             $blocked_by = $request->get('user')['id'];
@@ -202,7 +227,13 @@ class UserController extends Controller
         $query->execute();
 
         if ($query->rowCount() > 0) {
-            $this->notify($id, $request->get('user')['username'] . ' liked you in return', $user);
+            $this->notify($id, $request->get('user')['username'] . ' matched you', $user);
+
+            $query = $this->db()->prepare("INSERT INTO matches (user1_id, user2_id, created_at) VALUES (:user1_id, :user2_id, :created_at)");
+            $query->bindParam(':user1_id',$id);
+            $query->bindParam(':user2_id',$user);
+            $query->bindParam(':created_at',$created_at);
+            $query->execute();
         } else {
             $this->notify($id, $request->get('user')['username'] . ' liked you', $user);
         }
@@ -219,6 +250,15 @@ class UserController extends Controller
         $query->bindParam(':user_id',$id);
         $query->bindParam(':liked_by',$user);
         $query->execute();
+
+
+        $query =  $this->db()->prepare('DELETE FROM matches WHERE (user1_id = :user1_id AND user2_id = :user2_id) OR (user1_id = :user3_id AND user2_id = :user4_id)');
+        $query->bindParam(':user1_id',$id);
+        $query->bindParam(':user2_id',$user);
+        $query->bindParam(':user3_id',$user);
+        $query->bindParam(':user4_id',$id);
+        $query->execute();
+
 
         return response()->json([
             'success' => true,

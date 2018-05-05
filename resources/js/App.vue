@@ -5,12 +5,15 @@
         <b-container>
             <router-view></router-view>
         </b-container>
+        <chat></chat>
     </div>
 </template>
 
 <script>
     import header from './components/Header'
     import errors from './components/Errors'
+    import chat from './components/Chat'
+
     import { mapState } from 'vuex'
 
     import cookies from 'js-cookie';
@@ -20,7 +23,8 @@
         name: "app",
         components: {
             'heading': header,
-            'errors': errors
+            'errors': errors,
+            'chat': chat
         },
         computed: {
             ...mapState([
