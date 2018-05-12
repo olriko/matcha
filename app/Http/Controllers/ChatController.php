@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 
@@ -25,6 +26,15 @@ class ChatController extends Controller
         return $user->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    private function fetchMatch($id)
+    {
+        $query = $this->db()->prepare('SELECT * FROM matches WHERE id = :id');
+        $query->bindParam(':id', $id);
+        $query->execute();
+
+        return $query->fetch(\PDO::FETCH_ASSOC);
+    }
+
     public function get(Request $request)
     {
 
@@ -47,14 +57,50 @@ class ChatController extends Controller
         });
 
         return response()->json([
-            'current' => $user,
+            'current' => (int) $user,
             'matches' => $matches
         ]);
     }
 
-    public function store()
+    public function getMessages(Request $request, $id)
     {
+        return response()->json([
+            'messages' => $this->fetchMessages($id)
+        ]);
+    }
 
+    public function storeMessage(Request $request)
+    {
+        $user =  $request->get('user')['id'];
+        $match_id = $request->get('match_id');
+        $content = $request->get('content');
+        $created_at = Carbon::now()->toDateTimeString();
+
+        $match = $this->fetchMatch($match_id);
+
+        if ($match['user1_id'] == $user || $match['user2_id'] == $user) {
+
+            $this->notify(
+                $match['user1_id'] == $user ? $match['user2_id'] : $match['user1_id'],
+                $request->get('user')['username'] . ' text you',
+                $user
+            );
+
+            $query = $this->db()->prepare('INSERT INTO messages (match_id, user_id, content, created_at) VALUES (:match_id, :user_id, :content, :created_at)');
+            $query->bindParam(':match_id', $match_id);
+            $query->bindParam(':user_id', $user);
+            $query->bindParam(':content', $content);
+            $query->bindParam(':created_at', $created_at);
+            $query->execute();
+
+            return response()->json([
+                'success' => true
+            ]);
+        }
+
+        return response()->json([
+            'success' => false
+        ], 403);
     }
 
 }

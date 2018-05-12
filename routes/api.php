@@ -33,5 +33,8 @@ $router->post('/notifications/read', ['middleware' => 'auth', 'uses' => 'Notific
 
 $router->get('/matches', ['middleware' => 'auth', 'uses' => 'ChatController@get']);
 
+$router->get('/messages/{id}', ['middleware' => 'auth', 'uses' => 'ChatController@getMessages']);
+$router->post('/message', ['middleware' => 'auth', 'uses' => 'ChatController@storeMessage']);
+
 
 

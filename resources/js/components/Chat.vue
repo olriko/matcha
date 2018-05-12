@@ -1,15 +1,18 @@
 <template>
     <div v-if="jwt">
         <div v-show="display" id="chat">
-            <div class="row">
+            <b-row no-gutters>
                 <div class="col">
                     <div class="matches">
                         <h3 class="text-center">Your matches</h3>
-
+                        <b-button block size="sm" @click="setRoom(match)" :key="match.id" v-for="match in matches">{{ match.user1_id !== current ? match.user1.username : match.user2.username }}</b-button>
                     </div>
                 </div>
-                <div class="col"></div>
-            </div>
+                <div class="col">
+                    <room v-if="room"  :room="room"></room>
+                    <p v-else class="text-center">Select a user on the left</p>
+                </div>
+            </b-row>
         </div>
         <button @click="display = !display" id="button-chat">Chat</button>
     </div>
@@ -17,6 +20,7 @@
 
 <script>
     import {mapState} from 'vuex'
+    import ChatRoom from './ChatRoom'
 
     export default {
         name: "Chat",
@@ -24,13 +28,20 @@
             return {
                 display: true,
                 current: null,
-                matches: []
+                matches: [],
+                room: null
             }
         },
         mounted() {
            if (this.jwt) {
-               this.getMessages();
+               this.getMatches();
+               setInterval(() => {
+                   this.getMatches()
+               }, 5500)
            }
+        },
+        components: {
+            room: ChatRoom
         },
         computed: {
             ...mapState([
@@ -38,12 +49,17 @@
             ]),
         },
         methods: {
-            getMessages() {
+            setRoom(match) {
+                this.room = match
+            },
+            getMatches() {
                 axios.get('api/matches').then((rep) => {
                     if (rep.status === 200) {
                         this.current = rep.data.current;
-                        this.messages = rep.data.messages;
                         this.matches = rep.data.matches;
+
+                        if (this.room)
+                            this.room = _.find(this.matches, {id: this.room.id })
                     }
                 })
             }
@@ -64,9 +80,8 @@
         border-radius: 5px 5px 0 0;
         border: 1px solid #6f42c1;
         box-shadow: 0 -1px 6px 0 rgba(0,0,0,.5);
-        padding: 1rem;
-
         .matches {
+            padding: 1rem;
             h3 {
                 color: #5e14ff;
             }
