@@ -20,5 +20,6 @@
 		bottom: 0;
 		border-top: 1px solid #ccc;
 		padding: .5rem;
+		background-color: #5a6268;
 	}
 </style>

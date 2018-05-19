@@ -1,6 +1,6 @@
 <template>
     <b-row>
-        <b-col v-for="user in list" :key="user.id" sm="12" md="6" lg="4">
+        <b-col v-for="user in list" :key="user.id" sm="6" md="4" lg="3">
             <user-card :user="user"></user-card>
         </b-col>
     </b-row>
