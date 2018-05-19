@@ -13,7 +13,6 @@ class SearchController extends Controller
 
     public function search(Request $request)
     {
-        $max_results = 30;
 
         $birthday_min = Carbon::now()->subYears($request->get('age')[0])->toDateString();
         $birthday_max = Carbon::now()->subYears($request->get('age')[1])->toDateString();
@@ -23,9 +22,7 @@ class SearchController extends Controller
 
         $score_min = $request->get('score')[0];
         $score_max = $request->get('score')[1];
-
-        $offset = $max_results * ($request->get('page') - 1);
-
+        
         $where_birthday = '`birthday` BETWEEN :birthday_max AND :birthday_min';
         $where_score = '`score` BETWEEN :score_min AND :score_max';
 
@@ -35,9 +32,7 @@ class SearchController extends Controller
             $tag_ids = implode(', ', $tags);
         }
 
-        $query_string = "SELECT * FROM `users` WHERE $where_exists_tags AND $where_score AND $where_birthday LIMIT $max_results OFFSET :offset";
-
-//        dd($query_string, $birthday_min , $birthday_max);
+        $query_string = "SELECT * FROM `users` WHERE $where_exists_tags AND $where_score AND $where_birthday";
 
         $query = $this->db()->prepare($query_string);
 
@@ -50,8 +45,6 @@ class SearchController extends Controller
 
         $query->bindParam(':score_min', $score_min);
         $query->bindParam(':score_max', $score_max);
-
-        $query->bindParam(':offset',  $offset);
 
         $query->execute();
 
