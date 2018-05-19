@@ -6,6 +6,7 @@
             <router-view></router-view>
         </b-container>
         <chat></chat>
+        <v-footer></v-footer>
     </div>
 </template>
 
@@ -13,7 +14,7 @@
     import header from './components/Header'
     import errors from './components/Errors'
     import chat from './components/Chat'
-
+    import footer from './components/Footer'
     import { mapState } from 'vuex'
 
     import cookies from 'js-cookie';
@@ -24,7 +25,8 @@
         components: {
             'heading': header,
             'errors': errors,
-            'chat': chat
+            'chat': chat,
+            'v-footer': footer
         },
         computed: {
             ...mapState([

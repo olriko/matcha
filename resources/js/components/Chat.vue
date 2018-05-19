@@ -26,7 +26,7 @@
         name: "Chat",
         data() {
             return {
-                display: true,
+                display: false,
                 current: null,
                 matches: [],
                 room: null
@@ -72,7 +72,7 @@
         z-index: 500;
         background: white;
         position: fixed;
-        bottom: 0;
+        bottom: 40px;
         right: 200px;
 
         width: 600px;
@@ -92,7 +92,7 @@
 
     #button-chat {
         position: fixed;
-        bottom: 20px;
+        bottom: 60px;
         right: 20px;
 
         width: 100px;
