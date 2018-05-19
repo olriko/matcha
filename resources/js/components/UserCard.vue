@@ -24,7 +24,10 @@
         },
         computed: {
             avatar() {
-                return 'https://www.w3schools.com/howto/img_avatar.png';
+//                return '/storage/avatars/man.png';
+                return this.user.image
+                ? '/storage/avatars/' + this.user.image
+                : 'https://www.w3schools.com/howto/img_avatar.png';
             },
         },
     }

@@ -7,7 +7,7 @@
                     <p> An annoying 42 project.. </p>
                 </b-jumbotron>
             </b-col>
-            <b-col v-if="jwt" sm="5">
+            <b-col sm="5">
                 <div class="card">
                     <div class="card-body">
                         <h4>Search</h4>
@@ -25,8 +25,8 @@
                             </b-col>
                         </b-row>
                         <b-row class="my-1 mt-4">
-                            <b-col sm="2"><label>Tags</label></b-col>
-                            <b-col sm="10">
+                            <b-col sm="3"><label>Tags</label></b-col>
+                            <b-col sm="9">
                                 <vue-tags-input
                                         v-model="tag"
                                         :add-only-from-autocomplete="true"
@@ -37,58 +37,67 @@
                             </b-col>
                         </b-row>
                         <b-row class="my-1 mt-4">
-                            <b-col sm="2"><label>Localization</label></b-col>
-                            <b-col sm="10">
+                            <b-col sm="3"><label>Localization</label></b-col>
+                            <b-col sm="9">
+                                <gmap-autocomplete :enable-geolocation="true" :componentRestrictions="{country: 'fr'}"
+                                                   region="FR" @place_changed="setPlace" :options="options"
+                                                   class="form-control"></gmap-autocomplete>
                             </b-col>
                         </b-row>
                     </div>
                 </div>
             </b-col>
         </b-row>
-        <b-row class="mt-3" align-h="center">
-            <b-col sm="3">
-
-            </b-col>
-        </b-row>
+        <list :list="this.results"></list>
+        <div class="pagination">
+            <b-button size="sm" @click="previousPage()">Previous</b-button>
+            <b-badge>{{ search.page }}</b-badge>
+            <b-button size="sm" @click="nextPage()">Next</b-button>
+        </div>
     </div>
 </template>
 
 <script>
     import vueSlider from 'vue-slider-component'
     import VueTagsInput from '@johmun/vue-tags-input';
-    import {mapState} from 'vuex'
-
-
+    import List from '../UserList.vue';
 
     export default {
         name: "home",
         components: {
             vueSlider,
-            VueTagsInput
+            VueTagsInput,
+            List
         },
         mounted() {
             this.queryOfDeath();
         },
-        watch: {
-            'tag': 'fetchTags',
-        },
-        computed: {
-            ...mapState([
-                'jwt',
-            ])
-        },
         data() {
             return {
+                options: {},
                 search: {
                     age: [18, 60],
                     score: [0, 2000],
                     tags: [],
-                    localization: {}
+                    localization: {},
+                    page: 1
                 },
                 results: [],
                 tag: '',
                 suggestions: [],
-                debounce: 500,
+                debounce: 500
+            }
+        },
+        watch: {
+            'tag': 'fetchTags',
+            'search': {
+                handler: function () {
+                    clearTimeout(this.debounce);
+                    this.debounce = setTimeout(() => {
+                        this.queryOfDeath()
+                    }, 500)
+                },
+                deep: true
             }
         },
         methods: {
@@ -98,6 +107,20 @@
                         this.results = rep.data.results;
                     }
                 })
+            },
+            nextPage() {
+                if (this.results.length === 30) {
+                    this.search.page++
+                }
+            },
+            previousPage() {
+                if (this.search.page > 1) {
+                    this.search.page--
+                }
+            },
+            setPlace(place) {
+                console.log(place);
+                this.search.localization = place;
             },
             updateTags(newTags) {
                 this.search.tags = newTags;
@@ -109,7 +132,7 @@
                     this.debounce = setTimeout(() => {
                         axios.get(`api/tags/${this.tag}`).then((rep) => {
                             if (rep.status === 200) {
-                                this.suggestions =  rep.data.tags.map(o => {
+                                this.suggestions = rep.data.tags.map(o => {
                                     return {text: o.name, id: o.id}
                                 });
                             }
@@ -121,6 +144,15 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    .pagination {
+        padding: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        & > * {
+          margin: 0.5rem;
+        }
 
+    }
 </style>
