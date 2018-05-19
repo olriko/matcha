@@ -7,7 +7,7 @@
                     <p> An annoying 42 project.. </p>
                 </b-jumbotron>
             </b-col>
-            <b-col sm="5">
+            <b-col v-if="jwt" sm="5">
                 <div class="card">
                     <div class="card-body">
                         <h4>Search</h4>
@@ -56,6 +56,8 @@
 <script>
     import vueSlider from 'vue-slider-component'
     import VueTagsInput from '@johmun/vue-tags-input';
+    import {mapState} from 'vuex'
+
 
 
     export default {
@@ -70,6 +72,11 @@
         watch: {
             'tag': 'fetchTags',
         },
+        computed: {
+            ...mapState([
+                'jwt',
+            ])
+        },
         data() {
             return {
                 search: {
@@ -80,7 +87,8 @@
                 },
                 results: [],
                 tag: '',
-                suggestions: []
+                suggestions: [],
+                debounce: 500,
             }
         },
         methods: {

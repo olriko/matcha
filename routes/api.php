@@ -18,6 +18,8 @@ $router->get('/user/{id}/edit', 'UserController@edit');
 $router->put('/user', ['middleware' => 'auth', 'uses' => 'UserController@update']);
 $router->put('/user/geo', ['middleware' => 'auth', 'uses' => 'UserController@updateGeo']);
 
+$router->get('/suggestions/{id}', ['middleware' => 'auth', 'uses' => 'UserController@suggestions']);
+
 $router->get('/tags/{query}', 'TagController@search');
 $router->post('/tag', ['middleware' => 'auth', 'uses' =>'TagController@add']);
 $router->delete('/tag/{id}', ['middleware' => 'auth', 'uses' => 'TagController@remove']);

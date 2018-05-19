@@ -62,14 +62,25 @@
                </b-row>
             </b-col>
         </b-row>
+        <b-row class="mt-3" v-if="own">
+            <b-col sm="12">
+                <suggestions :userId="user.id"></suggestions>
+            </b-col>
+        </b-row>
     </div>
 </template>
 
 <script>
     import { mapGetters } from 'vuex'
+    import { suggestions } from '../Suggestions'
+    import Suggestions from "../Suggestions.vue";
 
     export default {
+        components: {Suggestions},
         name: "profile",
+        component: {
+            suggestions
+        },
         data() {
           return {
               user: null
