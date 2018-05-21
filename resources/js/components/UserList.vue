@@ -8,7 +8,7 @@
         </b-col>
         <b-col sm="12" md="6" lg="4">
             <label>
-                <input v-on:click="sortBy('localization')" v-bind:checked="sortType === 'localization'" type="radio" name="sort" />
+                <input v-on:click="sortBy('distance')" v-bind:checked="sortType === 'distance'" type="radio" name="sort" />
                 sort by distance
             </label>
         </b-col>
@@ -47,8 +47,14 @@
             displayedList() {
                 const from = (this.page - 1) * 30;
                 const to = (this.page * 30 ) - 1;
+                
+                console.log('this.list[0]',  this.list[0]);
                 return this.list
-                    .sort((a, b) => a[this.sortType] < b[this.sortType] ? 1 : -1)
+                    .sort((a, b) => a[this.sortType] < b[this.sortType] ? -1 : 1)
+                    .map(u => {
+                        u.distance = +u.distance.toFixed(1);
+                        return u;
+                    })
                     .slice(from, to);
             }
         },

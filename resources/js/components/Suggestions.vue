@@ -21,17 +21,19 @@
         },
         data() {
             return {
-                list: null
+                list: []
             }
         },
         created() {
             this.getSuggestionList();
-            this.list = this.list = [
+            // todo: get list from API
+            this.list  = [
                 {
                     id: 3,
                     first_name: 'Mathieu',
                     last_name: 'Ceccato',
                     gender: 'male',
+                    distance: 12,
                     description: 'qwertyuiop asdfghjkl zxcvbnm',
                     score: 1234,
                     birthday: '1998-01-29'
@@ -41,6 +43,7 @@
                     first_name: 'Olivier',
                     last_name: 'Hamon',
                     gender: 'male',
+                    distance: 5,
                     description: 'qwertyuiop asdfghjkl zxcvbnm',
                     score: 1234,
                     birthday: '1995-01-29'

@@ -12,6 +12,7 @@ class SearchController extends Controller
 {
 
     private $select = [
+        'id',
         'birthday',
         'description',
         'first_name',

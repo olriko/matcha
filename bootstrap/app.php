@@ -105,4 +105,7 @@ $app->router->group([
     });
 });
 
+ini_set('SMTP', 'localhost');
+ini_set('smtp_port', '1025');
+
 return $app;

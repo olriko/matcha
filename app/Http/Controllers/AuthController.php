@@ -114,6 +114,67 @@ class AuthController extends Controller
         $user = $this->db()->prepare("SELECT * FROM users WHERE email = :email");
         $user->bindParam(':email', $email);
         $user->execute();
+        $userInDb = $user->fetch(2);
 
+        if (isset($userInDb)) {
+            $token = sha1($userInDb['email'] . env('APP_KEY'));
+            $to = $userInDb['email'];
+            $subject = 'Recover password';
+            $userId = $userInDb['id'];
+            $email = $userInDb['email'];
+            $message = "change your password <a href=\"http://localhost:8000/#/change-password/$userId/$token\">HERE</a>";
+            $headers = "Content-Type: text/html; charset=ISO-8859-1\r\n";
+
+            $done = mail($email, $subject, $message, $headers);
+
+            return response()->json([
+                            'success' => true,
+                            'done' => $done
+             ]);
+        }
+
+        return response()->json([
+                        'success' => false
+                    ], 404);
+    }
+
+    public function newPassword(Request $request)
+    {
+        $id = $request->get('id');
+        $token = $request->get('token');
+
+        $user = $this->db()->prepare("SELECT * FROM users WHERE id = :id");
+                $user->bindParam(':id', $id);
+                $user->execute();
+        $userInDb = $user->fetch(2);
+
+        $this->validation($request, [
+            'password' => 'required|min:8',
+        ]);
+
+        if (isset($userInDb)) {
+            $token2 = sha1($userInDb['email'] . env('APP_KEY'));
+
+            if ($token === $token2) {
+                $password = password_hash($request->get('password'), PASSWORD_DEFAULT);
+
+                $req = $this->db()->prepare("UPDATE users SET password = :password WHERE id = :id");
+                $req->bindParam(':password', $password);
+                $req->bindParam(':id', $id);
+                $req->execute();
+
+                return response()->json([
+                    'success' => true
+                ]);
+            }
+            return response()->json([
+                'success' => false,
+                'error' => 'tokenError'
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => false
+        ], 400);
     }
 }
