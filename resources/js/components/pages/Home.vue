@@ -118,16 +118,6 @@
                     }
                 })
             },
-            nextPage() {
-                if (this.results.length === 30) {
-                    this.search.page++
-                }
-            },
-            previousPage() {
-                if (this.search.page > 1) {
-                    this.search.page--
-                }
-            },
             setPlace(place) {
                 console.log(place);
                 this.search.localization = place;
@@ -155,14 +145,5 @@
 </script>
 
 <style lang="scss" scoped>
-    .pagination {
-        padding: 1rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        & > * {
-          margin: 0.5rem;
-        }
 
-    }
 </style>

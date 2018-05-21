@@ -5,9 +5,10 @@
                 <img v-bind:src="avatar"
                      alt="Avatar"/>
                 <div class="card">
-                    <h4><b>{{ user.first_name }} {{ user.last_name }}</b>, {{ user.birthday | luxon.diffForHumans }}
-                    </h4>
-                    <p>{{ user.age }}</p>
+                    <h4><b>{{ user.first_name }} {{ user.last_name }}</b>, {{ age }} yo</h4>
+                    <h5>{{ user.localization }}km away from you</h5>
+                    <h5>score: {{ user.score }}</h5>
+                    <p>{{ user.description }}</p>
                 </div>
             </div>
         </router-link>
@@ -16,6 +17,7 @@
 
 <script>
     import {mapGetters} from 'vuex'
+    import * as moment from 'moment'
 
     export default {
         name: "user-card",
@@ -23,8 +25,10 @@
             user: Object
         },
         computed: {
+            age() {
+              return moment().diff(moment(this.user.birthday), 'years')
+            },
             avatar() {
-//                return '/storage/avatars/man.png';
                 return this.user.image
                 ? '/storage/avatars/' + this.user.image
                 : 'https://www.w3schools.com/howto/img_avatar.png';
