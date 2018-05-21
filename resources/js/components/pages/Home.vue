@@ -39,9 +39,16 @@
                         <b-row class="my-1 mt-4">
                             <b-col sm="3"><label>Localization</label></b-col>
                             <b-col sm="9">
-                                <gmap-autocomplete :enable-geolocation="true" :componentRestrictions="{country: 'fr'}"
-                                                   region="FR" @place_changed="setPlace" :options="options"
+                                <gmap-autocomplete :enable-geolocation="true"
+                                                   @place_changed="setPlace" :options="options"
                                                    class="form-control"></gmap-autocomplete>
+                            </b-col>
+                        </b-row>
+                        <b-row class="my-1 mt-4">
+                            <b-col sm="2"><label>Distance</label></b-col>
+                            <b-col sm="10">
+                                <vue-slider tooltip="always" :interval="100" v-model="search.distance" :min="0"
+                                            :max="2000"></vue-slider>
                             </b-col>
                         </b-row>
                     </div>
@@ -49,11 +56,6 @@
             </b-col>
         </b-row>
         <list :list="this.results"></list>
-        <div class="pagination">
-            <b-button size="sm" @click="previousPage()">Previous</b-button>
-            <b-badge>{{ search.page }}</b-badge>
-            <b-button size="sm" @click="nextPage()">Next</b-button>
-        </div>
     </div>
 </template>
 
@@ -61,6 +63,7 @@
     import vueSlider from 'vue-slider-component'
     import VueTagsInput from '@johmun/vue-tags-input';
     import List from '../UserList.vue';
+    import { mapState } from 'vuex';
 
     export default {
         name: "home",
@@ -70,7 +73,11 @@
             List
         },
         mounted() {
-            this.queryOfDeath();
+            if (!this.jwt) {
+                this.$router.push({name: 'login'})
+            } else {
+                this.queryOfDeath();
+            }
         },
         data() {
             return {
@@ -79,14 +86,17 @@
                     age: [18, 60],
                     score: [0, 2000],
                     tags: [],
-                    localization: {},
-                    page: 1
+                    localization: [],
+                    distance: 200,
                 },
                 results: [],
                 tag: '',
                 suggestions: [],
                 debounce: 500
             }
+        },
+        computed: {
+            ...mapState(['jwt'])
         },
         watch: {
             'tag': 'fetchTags',
