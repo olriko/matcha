@@ -23,7 +23,7 @@
                     <b-col sm="2" v-if="own">
                         <b-button type="button" :to="{ name: 'settings'}" :block="true" variant="secondary">Edit</b-button>
                     </b-col>
-                    <b-col v-if="!own" sm="2">
+                    <b-col v-if="!own" sm="2">x
                         <b-button type="button" @click="like" v-if="!user.i_like" :block="true" variant="danger">I LIKE</b-button>
                         <b-button type="button" @click="unlike" v-else block variant="warning">UNLIKE</b-button>
                     </b-col>
