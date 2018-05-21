@@ -3,6 +3,7 @@
 $router->post('/register', 'AuthController@register');
 $router->post('/login', 'AuthController@login');
 $router->post('/recover', 'AuthController@recover');
+$router->post('/new-password', 'AuthController@newPassword');
 
 $router->get('/user/{id}', 'UserController@show');
 

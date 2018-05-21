@@ -32,7 +32,7 @@
         },
         methods: {
             recover() {
-                axios.post('recover', {}).then((res) => {
+                axios.post('api/recover', {email: this.email}).then((res) => {
 
                 })
             }
