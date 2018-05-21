@@ -28,7 +28,7 @@ $router->post('/image', ['middleware' => 'auth', 'uses' =>'ImageController@add']
 $router->delete('/image/{id}', ['middleware' => 'auth', 'uses' => 'ImageController@remove']);
 $router->put('/image/{id}', ['middleware' => 'auth', 'uses' => 'ImageController@update']);
 
-$router->post('/search', 'SearchController@search');
+$router->post('/search', ['middleware' => 'auth', 'uses' => 'SearchController@search']);
 
 $router->get('/notifications', ['middleware' => 'auth', 'uses' => 'NotificationController@get']);
 $router->post('/notifications/read', ['middleware' => 'auth', 'uses' => 'NotificationController@read']);
