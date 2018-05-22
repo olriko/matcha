@@ -88,6 +88,7 @@
                     tags: [],
                     localization: [],
                     distance: 200,
+                    suggestion: false
                 },
                 results: [],
                 tag: '',

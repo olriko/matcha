@@ -46,6 +46,7 @@ class Controller extends BaseController
 
         $query =  $this->db()->prepare("UPDATE users SET scores = scores {$sign} {$points} WHERE id = :id");
 
+        //todo
         if ($query) {
             $query->bindParam(':id',$id);
             $query->execute();
