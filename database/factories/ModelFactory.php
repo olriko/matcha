@@ -30,9 +30,8 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
         'description' => $faker->paragraph(2),
         'score' => $faker->numberBetween(-500, 3000),
         'birthday' => $faker->dateTimeBetween('-50 years', '-18 years'),
-        //todo
-        'lat' => $faker->latitude,
-        'lng' => $faker->longitude
+        'lat' => $faker->numberBetween(49300, 55500) / 1000,
+        'lng' => $faker->numberBetween(-1000, 5000) / 1000
     ];
 });
 

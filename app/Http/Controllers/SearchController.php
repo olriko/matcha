@@ -63,6 +63,7 @@ class SearchController extends Controller
         $suggestion = '';
         $limit = '';
         $where_exists_tags = '';
+        $blocked = '1=1';
 
 
         $distance_val = $request->get('distance') ?? 0;
@@ -93,7 +94,10 @@ class SearchController extends Controller
 
         $distance = "1.6 * 3956 * 2 * ASIN(SQRT( POWER(SIN((:orig_lat_sin - abs(users.lat)) * pi()/180 / 2),2) + COS(:orig_lat_cos * pi()/180 ) * COS(abs(users.lat) *  pi()/180) * POWER(SIN((:orig_lng - users.lng) *  pi()/180 / 2), 2) )) as distance";
 
-        $blocked = implode(', ', $this->blocked($user['id']));
+        $blockedList = implode(', ', $this->blocked($user['id']));
+        if ($blockedList) {
+            $blocked = "id NOT IN ( $blockedList )";
+        }
 
         $distance_max = $distance_val > 0 ? "having distance < :distance_val" : '';
 
@@ -106,7 +110,7 @@ class SearchController extends Controller
         }
 
 
-        $query_string = "SELECT $select_sql, $distance FROM `users` WHERE id NOT IN ( $blocked ) $suggestion $where_exists_tags $where_score $where_birthday $distance_max ORDER BY distance ASC $limit";
+        $query_string = "SELECT $select_sql, $distance FROM `users` WHERE $blocked $suggestion $where_exists_tags $where_score $where_birthday $distance_max ORDER BY distance ASC $limit";
 
 
         $query = $this->db()->prepare($query_string);

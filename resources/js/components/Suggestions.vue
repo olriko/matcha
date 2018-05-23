@@ -58,9 +58,9 @@
         },
         methods: {
             getSuggestionList() {
-                axios.get(`api/suggestions/${this.userId}`).then((rep) => {
+                axios.get('api/search', {suggestion: true}).then((rep) => {
                     if (rep.status === 200) {
-                         this.list = rep.list;
+                         this.list = rep.data.results;
                     }
                 })
             }

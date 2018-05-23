@@ -37,7 +37,7 @@ class ChatController extends Controller
 
     public function get(Request $request)
     {
-        //todo
+        //todo check blocked
         $user =  $request->get('user')['id'];
 
         $query = $this->db()->prepare('SELECT * FROM matches WHERE user1_id = :user1_id OR  user2_id = :user2_id ORDER BY created_at DESC');

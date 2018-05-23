@@ -18,7 +18,7 @@
                                               placeholder="Confirm password"></b-form-input>
                             </b-form-group>
                             <div v-if="error" class="error">{{ error }}</div>
-                            <b-button type="button" to="login" variant="link">Back</b-button>
+                            <b-button type="button" to="/login" variant="link">Back</b-button>
                             <b-button type="submit" variant="primary">Submit</b-button>
                         </form>
                     </div>
