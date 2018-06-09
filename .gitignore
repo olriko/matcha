@@ -1,0 +1,10 @@
+/vendor
+/.idea
+/node_modules
+/public/js/app.js
+/public/css/app.css
+Homestead.json
+Homestead.yaml
+/storage/app/avatars/*
+!/storage/app/avatars/man.png
+!/storage/app/avatars/woman.png
